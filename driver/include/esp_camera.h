@@ -141,6 +141,8 @@ typedef struct {
 #if CONFIG_CAMERA_CONVERTER_ENABLED
     camera_conv_mode_t conv_mode;   /*!< RGB<->YUV Conversion mode */
 #endif
+
+    int sccb_i2c_port;              /*!< If pin_sccb_sda is NO_PIN, use the already configured I2C bus by number */
 } camera_config_t;
 
 /**
