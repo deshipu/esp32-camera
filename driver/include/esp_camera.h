@@ -115,11 +115,11 @@ typedef struct {
     union {
         int pin_sccb_sda;           /*!< GPIO pin for camera SDA line */
         int pin_sscb_sda;           /*!< GPIO pin for camera SDA line (legacy name) */
-    }
+    };
     union {
         int pin_sccb_scl;           /*!< GPIO pin for camera SCL line */
         int pin_sscb_scl;           /*!< GPIO pin for camera SCL line (legacy name) */
-    }
+    };
     int pin_d7;                     /*!< GPIO pin for camera D7 line */
     int pin_d6;                     /*!< GPIO pin for camera D6 line */
     int pin_d5;                     /*!< GPIO pin for camera D5 line */

@@ -156,10 +156,11 @@ static esp_err_t camera_probe(const camera_config_t *config, camera_model_t *out
         CAMERA_ENABLE_OUT_CLOCK(config);
     }
 
-    if (config->pin_sscb_sda != -1) {
-        ESP_LOGD(TAG, "Initializing SSCB");
-        SCCB_Init(config->pin_sscb_sda, config->pin_sscb_scl);
+    if (config->pin_sccb_sda != -1) {
+        ESP_LOGD(TAG, "Initializing SCCB");
+        SCCB_Init(config->pin_sccb_sda, config->pin_sccb_scl);
     } else {
+        ESP_LOGD(TAG, "Using existing I2C port");
         SCCB_Use_Port(config->sccb_i2c_port);
     }
 
@@ -342,14 +343,25 @@ esp_err_t esp_camera_deinit()
     return ret;
 }
 
-#define FB_GET_TIMEOUT (4000 / portTICK_PERIOD_MS)
+#define FB_GET_TIMEOUT (4000)
+
+bool esp_camera_fb_available() {
+    if (s_state == NULL) {
+        return false;
+    }
+    return cam_avail();
+}
 
 camera_fb_t *esp_camera_fb_get()
 {
+    return esp_camera_fb_get(FB_GET_TIMEOUT);
+}
+
+camera_fb_t *esp_camera_fb_get_timeout(int timeout) {
     if (s_state == NULL) {
         return NULL;
     }
-    camera_fb_t *fb = cam_take(FB_GET_TIMEOUT);
+    camera_fb_t *fb = cam_take(timeout / portTICK_PERIOD_MS);
     //set the frame properties
     if (fb) {
         fb->width = resolution[s_state->sensor.status.framesize].width;

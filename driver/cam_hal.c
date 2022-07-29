@@ -494,3 +494,10 @@ void cam_give(camera_fb_t *dma_buffer)
         }
     }
 }
+
+bool cam_avail(void)
+{
+    camera_fb_t *dma_buffer = NULL;
+    BaseType_t result = xQueuePeek(cam_obj->frame_buffer_queue, (void *)&dma_buffer, 0);
+    return result != pdFALSE;
+}
