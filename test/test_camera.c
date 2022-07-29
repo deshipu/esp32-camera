@@ -119,8 +119,8 @@ static esp_err_t init_camera(uint32_t xclk_freq_hz, pixformat_t pixel_format, fr
         .pin_pwdn = PWDN_GPIO_NUM,
         .pin_reset = RESET_GPIO_NUM,
         .pin_xclk = XCLK_GPIO_NUM,
-        .pin_sscb_sda = SIOD_GPIO_NUM,
-        .pin_sscb_scl = SIOC_GPIO_NUM,
+        .pin_sccb_sda = SIOD_GPIO_NUM,
+        .pin_sccb_scl = SIOC_GPIO_NUM,
 
         .pin_d7 = Y9_GPIO_NUM,
         .pin_d6 = Y8_GPIO_NUM,

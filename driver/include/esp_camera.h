@@ -18,8 +18,8 @@
         .pin_pwdn       = PIN_PWDN,
         .pin_reset      = PIN_RESET,
         .pin_xclk       = PIN_XCLK,
-        .pin_sscb_sda   = PIN_SIOD,
-        .pin_sscb_scl   = PIN_SIOC,
+        .pin_sccb_sda   = PIN_SIOD,
+        .pin_sccb_scl   = PIN_SIOC,
         .pin_d7         = PIN_D7,
         .pin_d6         = PIN_D6,
         .pin_d5         = PIN_D5,
@@ -112,8 +112,14 @@ typedef struct {
     int pin_pwdn;                   /*!< GPIO pin for camera power down line */
     int pin_reset;                  /*!< GPIO pin for camera reset line */
     int pin_xclk;                   /*!< GPIO pin for camera XCLK line */
-    int pin_sscb_sda;               /*!< GPIO pin for camera SDA line */
-    int pin_sscb_scl;               /*!< GPIO pin for camera SCL line */
+    union {
+        int pin_sccb_sda;           /*!< GPIO pin for camera SDA line */
+        int pin_sscb_sda;           /*!< GPIO pin for camera SDA line (legacy name) */
+    }
+    union {
+        int pin_sccb_scl;           /*!< GPIO pin for camera SCL line */
+        int pin_sscb_scl;           /*!< GPIO pin for camera SCL line (legacy name) */
+    }
     int pin_d7;                     /*!< GPIO pin for camera D7 line */
     int pin_d6;                     /*!< GPIO pin for camera D6 line */
     int pin_d5;                     /*!< GPIO pin for camera D5 line */
@@ -191,11 +197,25 @@ esp_err_t esp_camera_init(const camera_config_t* config);
 esp_err_t esp_camera_deinit();
 
 /**
+ * @brief Obtain pointer to a frame buffer, with timeout.
+ *
+ * @return pointer to the frame buffer, or NULL if no frame was obtained within the timeout
+ */
+camera_fb_t* esp_camera_fb_get_timeout(int timeout_ms);
+
+/**
  * @brief Obtain pointer to a frame buffer.
  *
  * @return pointer to the frame buffer
  */
 camera_fb_t* esp_camera_fb_get();
+
+/**
+ * @brief Check whether a framebuffer is avaiable without blocking
+ *
+ * @return true if available, false otherwise
+ */
+bool esp_camera_fb_available();
 
 /**
  * @brief Return the frame buffer to be reused again.
