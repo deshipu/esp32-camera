@@ -352,9 +352,9 @@ bool esp_camera_fb_available() {
     return cam_avail();
 }
 
-camera_fb_t *esp_camera_fb_get()
+camera_fb_t *esp_camera_fb_get(void)
 {
-    return esp_camera_fb_get(FB_GET_TIMEOUT);
+    return esp_camera_fb_get_timeout(FB_GET_TIMEOUT);
 }
 
 camera_fb_t *esp_camera_fb_get_timeout(int timeout) {
