@@ -10,7 +10,7 @@
 
 /**
  * 2. Kconfig setup
- * 
+ *
  * If you have a Kconfig file, copy the content from
  *  https://github.com/espressif/esp32-camera/blob/master/Kconfig into it.
  * In case you haven't, copy and paste this Kconfig file inside the src directory.
@@ -20,9 +20,9 @@
 
 /**
  * 3. Enable PSRAM on sdkconfig:
- * 
+ *
  * CONFIG_ESP32_SPIRAM_SUPPORT=y
- * 
+ *
  * More info on
  * https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html#config-esp32-spiram-support
  */
@@ -100,7 +100,7 @@ static camera_config_t camera_config = {
     .pin_reset = CAM_PIN_RESET,
     .pin_xclk = CAM_PIN_XCLK,
     .pin_sccb_sda = CAM_PIN_SIOD,
-    .pin_sscb_scl = CAM_PIN_SIOC,
+    .pin_sccb_scl = CAM_PIN_SIOC,
 
     .pin_d7 = CAM_PIN_D7,
     .pin_d6 = CAM_PIN_D6,

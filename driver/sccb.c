@@ -45,13 +45,15 @@ const int SCCB_I2C_PORT_DEFAULT = 1;
 const int SCCB_I2C_PORT_DEFAULT = 0;
 #endif
 
-int sccb_i2c_port;
-bool sccb_owns_i2c_port;
+static int sccb_i2c_port;
+static bool sccb_owns_i2c_port;
 
 int SCCB_Init(int pin_sda, int pin_scl)
 {
     ESP_LOGI(TAG, "yolo pin_sda %d pin_scl %d", pin_sda, pin_scl);
     i2c_config_t conf;
+    esp_err_t ret;
+
     memset(&conf, 0, sizeof(i2c_config_t));
 
     sccb_i2c_port = SCCB_I2C_PORT_DEFAULT;
@@ -65,17 +67,20 @@ int SCCB_Init(int pin_sda, int pin_scl)
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
     conf.master.clk_speed = SCCB_FREQ;
 
-    ESP_RETURN_ON_ERROR(i2c_param_config(sccb_i2c_port, &conf), TAG, "i2c_param_config failed");
-    ESP_RETURN_ON_ERROR(i2c_driver_install(sccb_i2c_port, conf.mode, 0, 0, 0), TAG, "i2c_driver_install");
+    if ((ret =  i2c_param_config(sccb_i2c_port, &conf)) != ESP_OK) {
+        return ret;
+    }
 
-    return ESP_OK;
+    return i2c_driver_install(sccb_i2c_port, conf.mode, 0, 0, 0);
 }
 
-int SCCB_Use_Port(int i2c_num) {
+int SCCB_Use_Port(int i2c_num) { // sccb use an already initialized I2C port
     if (sccb_owns_i2c_port) {
         SCCB_Deinit();
     }
-    ESP_RETURN_ON_FALSE(i2c_num >= 0 && i2c_num < I2C_NUM_MAX, ESP_ERR_INVALID_ARG, TAG, "i2c number error");
+    if (i2c_num < 0 || i2c_num > I2C_NUM_MAX) {
+        return ESP_ERR_INVALID_ARG;
+    }
     sccb_i2c_port = i2c_num;
     return ESP_OK;
 }
